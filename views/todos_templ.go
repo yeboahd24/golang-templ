@@ -12,8 +12,16 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
+	"go-crud-app/components/button"
+	"go-crud-app/components/input"
+	"go-crud-app/components/pagination"
 	"go-crud-app/models"
 	"strconv"
+)
+
+// Import button constants
+import (
+	. "go-crud-app/components/button"
 )
 
 func Todos(todos []models.Todo) templ.Component {
@@ -37,94 +45,431 @@ func Todos(todos []models.Todo) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<html><head><title>Todos</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><script defer src=\"https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js\"></script><style>\n                * {\n                    margin: 0;\n                    padding: 0;\n                    box-sizing: border-box;\n                }\n\n                body {\n                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;\n                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n                    min-height: 100vh;\n                    padding: 20px;\n                }\n\n                .container {\n                    max-width: 600px;\n                    margin: 0 auto;\n                    background: rgba(255, 255, 255, 0.95);\n                    backdrop-filter: blur(10px);\n                    border-radius: 20px;\n                    padding: 40px;\n                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);\n                }\n\n                h1 {\n                    text-align: center;\n                    color: #333;\n                    margin-bottom: 30px;\n                    font-size: 2.5rem;\n                    font-weight: 700;\n                    background: linear-gradient(135deg, #667eea, #764ba2);\n                    -webkit-background-clip: text;\n                    -webkit-text-fill-color: transparent;\n                    background-clip: text;\n                }\n\n                .add-form {\n                    display: flex;\n                    gap: 12px;\n                    margin-bottom: 30px;\n                    background: #f8f9fa;\n                    padding: 20px;\n                    border-radius: 15px;\n                    border: 2px solid #e9ecef;\n                }\n\n                .add-form input {\n                    flex: 1;\n                    padding: 12px 16px;\n                    border: 2px solid #dee2e6;\n                    border-radius: 10px;\n                    font-size: 16px;\n                    transition: all 0.3s ease;\n                    background: white;\n                }\n\n                .add-form input:focus {\n                    outline: none;\n                    border-color: #667eea;\n                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);\n                }\n\n                .btn {\n                    padding: 12px 24px;\n                    border: none;\n                    border-radius: 10px;\n                    font-size: 16px;\n                    font-weight: 600;\n                    cursor: pointer;\n                    transition: all 0.3s ease;\n                    text-transform: uppercase;\n                    letter-spacing: 0.5px;\n                }\n\n                .btn-primary {\n                    background: linear-gradient(135deg, #667eea, #764ba2);\n                    color: white;\n                }\n\n                .btn-primary:hover {\n                    transform: translateY(-2px);\n                    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);\n                }\n\n                .btn-danger {\n                    background: linear-gradient(135deg, #ff6b6b, #ee5a52);\n                    color: white;\n                    padding: 6px 12px;\n                    font-size: 12px;\n                    margin-left: 10px;\n                }\n\n                .btn-danger:hover {\n                    transform: translateY(-1px);\n                    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);\n                }\n\n                .todo-list {\n                    list-style: none;\n                }\n\n                .todo-item {\n                    background: white;\n                    margin-bottom: 12px;\n                    padding: 20px;\n                    border-radius: 12px;\n                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);\n                    border: 1px solid #e9ecef;\n                    display: flex;\n                    align-items: center;\n                    justify-content: space-between;\n                    transition: all 0.3s ease;\n                }\n\n                .todo-item:hover {\n                    transform: translateY(-2px);\n                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);\n                }\n\n                .todo-item.completed {\n                    opacity: 0.7;\n                    background: #f8f9fa;\n                }\n\n                .todo-item.completed .todo-text {\n                    text-decoration: line-through;\n                    color: #6c757d;\n                }\n\n                .fade-in {\n                    animation: fadeIn 0.5s ease-in;\n                }\n\n                .fade-out {\n                    animation: fadeOut 0.3s ease-out forwards;\n                }\n\n                @keyframes fadeIn {\n                    from { opacity: 0; transform: translateY(-10px); }\n                    to { opacity: 1; transform: translateY(0); }\n                }\n\n                @keyframes fadeOut {\n                    from { opacity: 1; transform: translateY(0); }\n                    to { opacity: 0; transform: translateY(-10px); }\n                }\n\n                .loading {\n                    opacity: 0.6;\n                    pointer-events: none;\n                }\n\n                .btn:disabled {\n                    opacity: 0.6;\n                    cursor: not-allowed;\n                }\n\n                .todo-content {\n                    display: flex;\n                    align-items: center;\n                    gap: 15px;\n                    flex: 1;\n                }\n\n                .todo-text {\n                    font-size: 16px;\n                    color: #333;\n                    font-weight: 500;\n                }\n\n                .status-icon {\n                    font-size: 20px;\n                    min-width: 24px;\n                }\n\n                .btn-toggle {\n                    background: none;\n                    border: none;\n                    font-size: 20px;\n                    cursor: pointer;\n                    padding: 5px;\n                    border-radius: 8px;\n                    transition: all 0.3s ease;\n                    min-width: 32px;\n                    height: 32px;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                }\n\n                .btn-toggle:hover {\n                    background: rgba(102, 126, 234, 0.1);\n                    transform: scale(1.1);\n                }\n\n                .todo-actions {\n                    display: flex;\n                    gap: 10px;\n                    align-items: center;\n                }\n\n                .empty-state {\n                    text-align: center;\n                    padding: 60px 20px;\n                    color: #6c757d;\n                }\n\n                .empty-state h3 {\n                    font-size: 1.5rem;\n                    margin-bottom: 10px;\n                    color: #495057;\n                }\n\n                @media (max-width: 768px) {\n                    .container {\n                        margin: 10px;\n                        padding: 20px;\n                    }\n                    \n                    h1 {\n                        font-size: 2rem;\n                    }\n                    \n                    .add-form {\n                        flex-direction: column;\n                    }\n                    \n                    .todo-item {\n                        flex-direction: column;\n                        align-items: flex-start;\n                        gap: 15px;\n                    }\n                    \n                    .todo-content {\n                        width: 100%;\n                    }\n                }\n            </style></head><body x-data=\"todoApp()\"><div class=\"container\"><h1>My Todo List</h1><form action=\"/create\" method=\"POST\" class=\"add-form\" x-on:submit=\"isSubmitting = true\" x-bind:class=\"{ &#39;loading&#39;: isSubmitting }\"><input type=\"text\" name=\"task\" placeholder=\"What needs to be done?\" required x-bind:disabled=\"isSubmitting\"> <button type=\"submit\" class=\"btn btn-primary\" x-bind:disabled=\"isSubmitting\"><span x-show=\"!isSubmitting\">Add Task</span> <span x-show=\"isSubmitting\">Adding...</span></button></form><ul class=\"todo-list\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<html><head><title>Todos</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\"><script defer src=\"https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js\"></script><style>\n                /* TemplUI CSS Variables */\n                :root {\n                    --primary: 222.2 84% 4.9%;\n                    --primary-foreground: 210 40% 98%;\n                    --background: 0 0% 100%;\n                    --foreground: 222.2 84% 4.9%;\n                    --muted: 210 40% 96%;\n                    --muted-foreground: 215.4 16.3% 46.9%;\n                    --border: 214.3 31.8% 91.4%;\n                    --ring: 222.2 84% 4.9%;\n                }\n\n                .border-primary { border-color: hsl(var(--primary)); }\n                .bg-background { background-color: hsl(var(--background)); }\n                .text-primary-foreground { color: hsl(var(--primary-foreground)); }\n                .bg-primary { background-color: hsl(var(--primary)); }\n                * {\n                    margin: 0;\n                    padding: 0;\n                    box-sizing: border-box;\n                }\n\n                body {\n                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;\n                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n                    min-height: 100vh;\n                    padding: 20px;\n                }\n\n                .container {\n                    max-width: 600px;\n                    margin: 0 auto;\n                    background: rgba(255, 255, 255, 0.95);\n                    backdrop-filter: blur(10px);\n                    border-radius: 20px;\n                    padding: 40px;\n                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);\n                }\n\n                h1 {\n                    text-align: center;\n                    color: #333;\n                    margin-bottom: 30px;\n                    font-size: 2.5rem;\n                    font-weight: 700;\n                    background: linear-gradient(135deg, #667eea, #764ba2);\n                    -webkit-background-clip: text;\n                    -webkit-text-fill-color: transparent;\n                    background-clip: text;\n                }\n\n                .add-form {\n                    margin-bottom: 30px;\n                    background: #f8f9fa;\n                    padding: 20px;\n                    border-radius: 15px;\n                    border: 2px solid #e9ecef;\n                }\n\n                /* TemplUI components handle their own styling */\n\n                .btn {\n                    padding: 12px 24px;\n                    border: none;\n                    border-radius: 10px;\n                    font-size: 16px;\n                    font-weight: 600;\n                    cursor: pointer;\n                    transition: all 0.3s ease;\n                    text-transform: uppercase;\n                    letter-spacing: 0.5px;\n                }\n\n                .btn-primary {\n                    background: linear-gradient(135deg, #667eea, #764ba2);\n                    color: white;\n                }\n\n                .btn-primary:hover {\n                    transform: translateY(-2px);\n                    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);\n                }\n\n                .btn-danger {\n                    background: linear-gradient(135deg, #ff6b6b, #ee5a52);\n                    color: white;\n                    padding: 6px 12px;\n                    font-size: 12px;\n                    margin-left: 10px;\n                }\n\n                .btn-danger:hover {\n                    transform: translateY(-1px);\n                    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);\n                }\n\n                .todo-list {\n                    list-style: none;\n                }\n\n                .todo-item {\n                    background: white;\n                    margin-bottom: 12px;\n                    padding: 20px;\n                    border-radius: 12px;\n                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);\n                    border: 1px solid #e9ecef;\n                    display: flex;\n                    align-items: center;\n                    justify-content: space-between;\n                    transition: all 0.3s ease;\n                }\n\n                .todo-item:hover {\n                    transform: translateY(-2px);\n                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);\n                }\n\n                .todo-item.completed {\n                    opacity: 0.7;\n                    background: #f8f9fa;\n                }\n\n                .todo-item.completed .todo-text {\n                    text-decoration: line-through;\n                    color: #6c757d;\n                }\n\n                .fade-in {\n                    animation: fadeIn 0.5s ease-in;\n                }\n\n                .fade-out {\n                    animation: fadeOut 0.3s ease-out forwards;\n                }\n\n                @keyframes fadeIn {\n                    from { opacity: 0; transform: translateY(-10px); }\n                    to { opacity: 1; transform: translateY(0); }\n                }\n\n                @keyframes fadeOut {\n                    from { opacity: 1; transform: translateY(0); }\n                    to { opacity: 0; transform: translateY(-10px); }\n                }\n\n                .loading {\n                    opacity: 0.6;\n                    pointer-events: none;\n                }\n\n                .btn:disabled {\n                    opacity: 0.6;\n                    cursor: not-allowed;\n                }\n\n                .todo-content {\n                    display: flex;\n                    align-items: center;\n                    gap: 15px;\n                    flex: 1;\n                }\n\n                .todo-text {\n                    font-size: 16px;\n                    color: #333;\n                    font-weight: 500;\n                }\n\n                .status-icon {\n                    font-size: 20px;\n                    min-width: 24px;\n                }\n\n                .btn-toggle {\n                    background: none;\n                    border: none;\n                    font-size: 20px;\n                    cursor: pointer;\n                    padding: 5px;\n                    border-radius: 8px;\n                    transition: all 0.3s ease;\n                    min-width: 32px;\n                    height: 32px;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                }\n\n                .btn-toggle:hover {\n                    background: rgba(102, 126, 234, 0.1);\n                    transform: scale(1.1);\n                }\n\n                .todo-actions {\n                    display: flex;\n                    gap: 10px;\n                    align-items: center;\n                }\n\n                .empty-state {\n                    text-align: center;\n                    padding: 60px 20px;\n                    color: #6c757d;\n                }\n\n                .empty-state h3 {\n                    font-size: 1.5rem;\n                    margin-bottom: 10px;\n                    color: #495057;\n                }\n\n                @media (max-width: 768px) {\n                    .container {\n                        margin: 10px;\n                        padding: 20px;\n                    }\n\n                    h1 {\n                        font-size: 2rem;\n                    }\n\n                    .add-form {\n                        flex-direction: column;\n                    }\n\n                    .todo-item {\n                        flex-direction: column;\n                        align-items: flex-start;\n                        gap: 15px;\n                    }\n\n                    .todo-content {\n                        width: 100%;\n                    }\n                }\n            </style></head><body x-data=\"todoApp()\"><div class=\"container\"><h1>My Todo List</h1><form action=\"/create\" method=\"POST\" class=\"add-form\"><div class=\"flex gap-3 items-center\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = input.Input(input.Props{
+			ID:          "task",
+			Name:        "task",
+			Type:        input.TypeText,
+			Required:    true,
+			Placeholder: "What needs to be done?",
+			Class:       "flex-1",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var2 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+			if !templ_7745c5c3_IsBuffer {
+				defer func() {
+					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err == nil {
+						templ_7745c5c3_Err = templ_7745c5c3_BufErr
+					}
+				}()
+			}
+			ctx = templ.InitializeContext(ctx)
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "Add Task")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			return nil
+		})
+		templ_7745c5c3_Err = button.Button(button.Props{
+			Type:    TypeSubmit,
+			Variant: VariantDefault,
+		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></form><ul class=\"todo-list\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, todo := range todos {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<li class=\"todo-item fade-in\" x-bind:class=\"{ &#39;completed&#39;: false }\" x-data=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var2 string
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ completed: %t, deleting: false, toggling: false }", todo.Done))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 268, Col: 110}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><div class=\"todo-content\"><form action=\"/toggle\" method=\"POST\" style=\"display: inline;\" x-on:submit=\"toggling = true\" x-bind:class=\"{ &#39;loading&#39;: toggling }\"><input type=\"hidden\" name=\"id\" value=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<li class=\"todo-item fade-in\" x-bind:class=\"{ &#39;completed&#39;: false }\" x-data=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(todo.ID))
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ completed: %t, deleting: false, toggling: false }", todo.Done))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 273, Col: 92}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 289, Col: 110}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"> <button type=\"submit\" class=\"btn-toggle\" title=\"Toggle completion\" x-bind:disabled=\"toggling || deleting\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if todo.Done {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "✅")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "🔲")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</button></form><span class=\"todo-text\" x-bind:class=\"{ &#39;completed&#39;: completed }\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\"><div class=\"todo-content\"><form action=\"/toggle\" method=\"POST\" style=\"display: inline;\" x-on:submit=\"toggling = true\" x-bind:class=\"{ &#39;loading&#39;: toggling }\"><input type=\"hidden\" name=\"id\" value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(todo.Task)
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(todo.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 284, Col: 105}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 294, Col: 92}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</span></div><div class=\"todo-actions\"><form action=\"/delete\" method=\"POST\" style=\"display: inline;\" x-on:submit=\"deleting = true; $el.closest(&#39;.todo-item&#39;).classList.add(&#39;fade-out&#39;)\"><input type=\"hidden\" name=\"id\" value=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(todo.ID))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 289, Col: 92}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			templ_7745c5c3_Var5 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				if todo.Done {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "✅")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "☐")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = button.Button(button.Props{
+				Type:    TypeSubmit,
+				Variant: VariantGhost,
+				Size:    SizeIcon,
+				Class:   "p-2",
+				Attributes: templ.Attributes{
+					"title":           "Toggle completion",
+					"x-bind:disabled": "toggling || deleting",
+				},
+			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\"> <button type=\"submit\" class=\"btn btn-danger\" x-bind:disabled=\"deleting || toggling\"><span x-show=\"!deleting\">Delete</span> <span x-show=\"deleting\">Deleting...</span></button></form></div></li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</form><span class=\"todo-text\" x-bind:class=\"{ &#39;completed&#39;: completed }\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(todo.Task)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 312, Col: 105}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</span></div><div class=\"todo-actions\"><form action=\"/delete\" method=\"POST\" style=\"display: inline;\" x-on:submit=\"deleting = true; $el.closest(&#39;.todo-item&#39;).classList.add(&#39;fade-out&#39;)\"><input type=\"hidden\" name=\"id\" value=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var7 string
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(todo.ID))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 317, Col: 92}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var8 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span x-show=\"!deleting\">Delete</span> <span x-show=\"deleting\">Deleting...</span>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = button.Button(button.Props{
+				Type:    TypeSubmit,
+				Variant: VariantDestructive,
+				Class:   "btn btn-danger",
+				Attributes: templ.Attributes{
+					"x-bind:disabled": "deleting || toggling",
+				},
+			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</form></div></li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</ul>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</ul>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(todos) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"empty-state\" x-show=\"true\" x-transition><h3>No todos yet!</h3><p>Add your first task above to get started.</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"empty-state\" x-show=\"true\" x-transition><h3>No todos yet!</h3><p>Add your first task above to get started.</p></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<!-- Pagination Example (for demonstration) --> <div class=\"mt-8\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var9 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Var10 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Var11 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Err = pagination.Previous(pagination.PreviousProps{
+							Disabled: true,
+							Label:    "Previous",
+						}).Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = pagination.Item().Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, " ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Var12 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Var13 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+							templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+							templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+							if !templ_7745c5c3_IsBuffer {
+								defer func() {
+									templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+									if templ_7745c5c3_Err == nil {
+										templ_7745c5c3_Err = templ_7745c5c3_BufErr
+									}
+								}()
+							}
+							ctx = templ.InitializeContext(ctx)
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "1")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							return nil
+						})
+						templ_7745c5c3_Err = pagination.Link(pagination.LinkProps{
+							IsActive: true,
+						}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = pagination.Item().Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, " ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Var14 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Var15 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+							templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+							templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+							if !templ_7745c5c3_IsBuffer {
+								defer func() {
+									templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+									if templ_7745c5c3_Err == nil {
+										templ_7745c5c3_Err = templ_7745c5c3_BufErr
+									}
+								}()
+							}
+							ctx = templ.InitializeContext(ctx)
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "2")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							return nil
+						})
+						templ_7745c5c3_Err = pagination.Link(pagination.LinkProps{
+							Href: "/?page=2",
+						}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var15), templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = pagination.Item().Render(templ.WithChildren(ctx, templ_7745c5c3_Var14), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, " ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Var16 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Var17 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+							templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+							templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+							if !templ_7745c5c3_IsBuffer {
+								defer func() {
+									templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+									if templ_7745c5c3_Err == nil {
+										templ_7745c5c3_Err = templ_7745c5c3_BufErr
+									}
+								}()
+							}
+							ctx = templ.InitializeContext(ctx)
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "3")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							return nil
+						})
+						templ_7745c5c3_Err = pagination.Link(pagination.LinkProps{
+							Href: "/?page=3",
+						}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var17), templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = pagination.Item().Render(templ.WithChildren(ctx, templ_7745c5c3_Var16), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, " ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Var18 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Err = pagination.Next(pagination.NextProps{
+							Href:  "/?page=2",
+							Label: "Next",
+						}).Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = pagination.Item().Render(templ.WithChildren(ctx, templ_7745c5c3_Var18), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = pagination.Content().Render(templ.WithChildren(ctx, templ_7745c5c3_Var10), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = pagination.Pagination().Render(templ.WithChildren(ctx, templ_7745c5c3_Var9), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><script>\n                function todoApp() {\n                    return {\n                        isSubmitting: false,\n                        \n                        init() {\n                            // Reset form state after page load\n                            this.isSubmitting = false;\n                        }\n                    }\n                }\n            </script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div><script>\n                function todoApp() {\n                    return {\n                        isSubmitting: false,\n\n                        init() {\n                            // Reset form state after page load\n                            this.isSubmitting = false;\n                        }\n                    }\n                }\n            </script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -10,11 +10,20 @@ import (
 func CreateTables(db *sql.DB) {
 	log.Println("Tables created")
 
-	// Create tables
+	// Create todos table
 	db.Exec(`CREATE TABLE IF NOT EXISTS todos (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		task TEXT NOT NULL,
 		done BOOLEAN NOT NULL
+	)`)
+
+	// Create users table
+	db.Exec(`CREATE TABLE IF NOT EXISTS users (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		email TEXT NOT NULL UNIQUE,
+		password TEXT NOT NULL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	)`)
 }
 

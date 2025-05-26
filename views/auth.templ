@@ -1,0 +1,363 @@
+package views
+
+import (
+	"go-crud-app/components/form"
+	"go-crud-app/components/button"
+	"go-crud-app/components/input"
+)
+
+// Import button constants
+import (
+	. "go-crud-app/components/button"
+)
+
+templ Login() {
+	<html>
+		<head>
+			<title>Login</title>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+			<style>
+				body {
+					font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+					background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+					min-height: 100vh;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: 20px;
+				}
+				.auth-container {
+					max-width: 400px;
+					width: 100%;
+					background: rgba(255, 255, 255, 0.95);
+					backdrop-filter: blur(10px);
+					border-radius: 20px;
+					padding: 40px;
+					box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+				}
+				.auth-title {
+					text-align: center;
+					margin-bottom: 30px;
+					font-size: 2rem;
+					font-weight: 700;
+					background: linear-gradient(135deg, #667eea, #764ba2);
+					-webkit-background-clip: text;
+					-webkit-text-fill-color: transparent;
+					background-clip: text;
+				}
+				.form-footer {
+					margin-top: 20px;
+					text-align: center;
+				}
+				.form-footer a {
+					color: #667eea;
+					text-decoration: none;
+				}
+				.error-message {
+					color: #e53e3e;
+					font-size: 0.8rem;
+					margin-top: 0.25rem;
+				}
+				input:invalid {
+					border-color: #e53e3e;
+				}
+			</style>
+		</head>
+		<body class="bg-gray-100">
+			<div class="auth-container">
+				<h1 class="auth-title">Login</h1>
+				<form 
+					id="login-form"
+					action="/login" 
+					method="POST" 
+					class="space-y-4"
+					novalidate
+				>
+					@form.Item() {
+						@form.Label(form.LabelProps{
+							For: "email",
+							Class: "block text-sm font-medium text-gray-700 mb-1",
+						}) {
+							Email
+						}
+						@input.Input(input.Props{
+							ID: "email",
+							Name: "email",
+							Type: input.TypeEmail,
+							Required: true,
+							Placeholder: "your@email.com",
+						})
+						<div class="error-message hidden" id="email-error"></div>
+					}
+					@form.Item() {
+						@form.Label(form.LabelProps{
+							For: "password",
+							Class: "block text-sm font-medium text-gray-700 mb-1",
+						}) {
+							Password
+						}
+						@input.Input(input.Props{
+							ID: "password",
+							Name: "password",
+							Type: input.TypePassword,
+							Required: true,
+						})
+						<div class="error-message hidden" id="password-error"></div>
+					}
+					<div class="mt-6">
+						@button.Button(button.Props{
+							Type: TypeSubmit,
+							Variant: VariantDefault,
+							FullWidth: true,
+							Class: "w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500",
+						}) {
+							Login
+						}
+					</div>
+					<div class="form-footer">
+						<p>Don't have an account? <a href="/signup" class="font-medium text-indigo-600 hover:text-indigo-500">Sign up</a></p>
+					</div>
+				</form>
+			</div>
+			
+			<script>
+				document.addEventListener('DOMContentLoaded', function() {
+					const loginForm = document.getElementById('login-form');
+					const emailInput = document.getElementById('email');
+					const passwordInput = document.getElementById('password');
+					const emailError = document.getElementById('email-error');
+					const passwordError = document.getElementById('password-error');
+					
+					function validateEmail(email) {
+						const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+						return re.test(String(email).toLowerCase());
+					}
+					
+					loginForm.addEventListener('submit', function(e) {
+						let isValid = true;
+						
+						// Reset errors
+						emailError.textContent = '';
+						emailError.classList.add('hidden');
+						passwordError.textContent = '';
+						passwordError.classList.add('hidden');
+						
+						// Validate email
+						if (!emailInput.value) {
+							emailError.textContent = 'Email is required';
+							emailError.classList.remove('hidden');
+							isValid = false;
+						} else if (!validateEmail(emailInput.value)) {
+							emailError.textContent = 'Please enter a valid email address';
+							emailError.classList.remove('hidden');
+							isValid = false;
+						}
+						
+						// Validate password
+						if (!passwordInput.value) {
+							passwordError.textContent = 'Password is required';
+							passwordError.classList.remove('hidden');
+							isValid = false;
+						}
+						
+						if (!isValid) {
+							e.preventDefault();
+						}
+					});
+				});
+			</script>
+		</body>
+	</html>
+}
+
+templ Signup() {
+	<html>
+		<head>
+			<title>Sign Up</title>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+			<style>
+				body {
+					font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+					background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+					min-height: 100vh;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: 20px;
+				}
+				.auth-container {
+					max-width: 400px;
+					width: 100%;
+					background: rgba(255, 255, 255, 0.95);
+					backdrop-filter: blur(10px);
+					border-radius: 20px;
+					padding: 40px;
+					box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+				}
+				.auth-title {
+					text-align: center;
+					margin-bottom: 30px;
+					font-size: 2rem;
+					font-weight: 700;
+					background: linear-gradient(135deg, #667eea, #764ba2);
+					-webkit-background-clip: text;
+					-webkit-text-fill-color: transparent;
+					background-clip: text;
+				}
+				.form-footer {
+					margin-top: 20px;
+					text-align: center;
+				}
+				.form-footer a {
+					color: #667eea;
+					text-decoration: none;
+				}
+				.error-message {
+					color: #e53e3e;
+					font-size: 0.8rem;
+					margin-top: 0.25rem;
+				}
+				input:invalid {
+					border-color: #e53e3e;
+				}
+			</style>
+		</head>
+		<body class="bg-gray-100">
+			<div class="auth-container">
+				<h1 class="auth-title">Sign Up</h1>
+				<form 
+					id="signup-form"
+					action="/signup" 
+					method="POST" 
+					class="space-y-4"
+					novalidate
+				>
+					@form.Item() {
+						@form.Label(form.LabelProps{
+							For: "name",
+							Class: "block text-sm font-medium text-gray-700 mb-1",
+						}) {
+							Name
+						}
+						@input.Input(input.Props{
+							ID: "name",
+							Name: "name",
+							Type: input.TypeText,
+							Required: true,
+							Placeholder: "Your name",
+						})
+						<div class="error-message hidden" id="name-error"></div>
+					}
+					@form.Item() {
+						@form.Label(form.LabelProps{
+							For: "email",
+							Class: "block text-sm font-medium text-gray-700 mb-1",
+						}) {
+							Email
+						}
+						@input.Input(input.Props{
+							ID: "email",
+							Name: "email",
+							Type: input.TypeEmail,
+							Required: true,
+							Placeholder: "your@email.com",
+						})
+						<div class="error-message hidden" id="email-error"></div>
+					}
+					@form.Item() {
+						@form.Label(form.LabelProps{
+							For: "password",
+							Class: "block text-sm font-medium text-gray-700 mb-1",
+						}) {
+							Password
+						}
+						@input.Input(input.Props{
+							ID: "password",
+							Name: "password",
+							Type: input.TypePassword,
+							Required: true,
+						})
+						<div class="error-message hidden" id="password-error"></div>
+					}
+					<div class="mt-6">
+						@button.Button(button.Props{
+							Type: TypeSubmit,
+							Variant: VariantDefault,
+							FullWidth: true,
+							Class: "w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500",
+						}) {
+							Sign Up
+						}
+					</div>
+					<div class="form-footer">
+						<p>Already have an account? <a href="/login" class="font-medium text-indigo-600 hover:text-indigo-500">Login</a></p>
+					</div>
+				</form>
+			</div>
+			
+			<script>
+				document.addEventListener('DOMContentLoaded', function() {
+					const signupForm = document.getElementById('signup-form');
+					const nameInput = document.getElementById('name');
+					const emailInput = document.getElementById('email');
+					const passwordInput = document.getElementById('password');
+					const nameError = document.getElementById('name-error');
+					const emailError = document.getElementById('email-error');
+					const passwordError = document.getElementById('password-error');
+					
+					function validateEmail(email) {
+						const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+						return re.test(String(email).toLowerCase());
+					}
+					
+					signupForm.addEventListener('submit', function(e) {
+						let isValid = true;
+						
+						// Reset errors
+						nameError.textContent = '';
+						nameError.classList.add('hidden');
+						emailError.textContent = '';
+						emailError.classList.add('hidden');
+						passwordError.textContent = '';
+						passwordError.classList.add('hidden');
+						
+						// Validate name
+						if (!nameInput.value) {
+							nameError.textContent = 'Name is required';
+							nameError.classList.remove('hidden');
+							isValid = false;
+						}
+						
+						// Validate email
+						if (!emailInput.value) {
+							emailError.textContent = 'Email is required';
+							emailError.classList.remove('hidden');
+							isValid = false;
+						} else if (!validateEmail(emailInput.value)) {
+							emailError.textContent = 'Please enter a valid email address';
+							emailError.classList.remove('hidden');
+							isValid = false;
+						}
+						
+						// Validate password
+						if (!passwordInput.value) {
+							passwordError.textContent = 'Password is required';
+							passwordError.classList.remove('hidden');
+							isValid = false;
+						} else if (passwordInput.value.length < 6) {
+							passwordError.textContent = 'Password must be at least 6 characters';
+							passwordError.classList.remove('hidden');
+							isValid = false;
+						}
+						
+						if (!isValid) {
+							e.preventDefault();
+						}
+					});
+				});
+			</script>
+		</body>
+	</html>
+}

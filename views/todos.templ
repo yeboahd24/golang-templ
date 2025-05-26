@@ -1,18 +1,44 @@
 //go:generate templ generate
 package views
+
 import (
     "go-crud-app/models"
     "strconv"
     "fmt"
+    "go-crud-app/components/button"
+    "go-crud-app/components/input"
+    "go-crud-app/components/pagination"
 )
 
-templ Todos(todos []models.Todo) {
+// Import button constants
+import (
+    . "go-crud-app/components/button"
+)
+
+templ Todos(todos []models.Todo, paginationData models.PaginationData) {
     <html>
         <head>
             <title>Todos</title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
             <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js"></script>
             <style>
+                /* TemplUI CSS Variables */
+                :root {
+                    --primary: 222.2 84% 4.9%;
+                    --primary-foreground: 210 40% 98%;
+                    --background: 0 0% 100%;
+                    --foreground: 222.2 84% 4.9%;
+                    --muted: 210 40% 96%;
+                    --muted-foreground: 215.4 16.3% 46.9%;
+                    --border: 214.3 31.8% 91.4%;
+                    --ring: 222.2 84% 4.9%;
+                }
+
+                .border-primary { border-color: hsl(var(--primary)); }
+                .bg-background { background-color: hsl(var(--background)); }
+                .text-primary-foreground { color: hsl(var(--primary-foreground)); }
+                .bg-primary { background-color: hsl(var(--primary)); }
                 * {
                     margin: 0;
                     padding: 0;
@@ -49,8 +75,6 @@ templ Todos(todos []models.Todo) {
                 }
 
                 .add-form {
-                    display: flex;
-                    gap: 12px;
                     margin-bottom: 30px;
                     background: #f8f9fa;
                     padding: 20px;
@@ -58,21 +82,7 @@ templ Todos(todos []models.Todo) {
                     border: 2px solid #e9ecef;
                 }
 
-                .add-form input {
-                    flex: 1;
-                    padding: 12px 16px;
-                    border: 2px solid #dee2e6;
-                    border-radius: 10px;
-                    font-size: 16px;
-                    transition: all 0.3s ease;
-                    background: white;
-                }
-
-                .add-form input:focus {
-                    outline: none;
-                    border-color: #667eea;
-                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-                }
+                /* TemplUI components handle their own styling */
 
                 .btn {
                     padding: 12px 24px;
@@ -230,21 +240,21 @@ templ Todos(todos []models.Todo) {
                         margin: 10px;
                         padding: 20px;
                     }
-                    
+
                     h1 {
                         font-size: 2rem;
                     }
-                    
+
                     .add-form {
                         flex-direction: column;
                     }
-                    
+
                     .todo-item {
                         flex-direction: column;
                         align-items: flex-start;
                         gap: 15px;
                     }
-                    
+
                     .todo-content {
                         width: 100%;
                     }
@@ -254,44 +264,68 @@ templ Todos(todos []models.Todo) {
         <body x-data="todoApp()">
             <div class="container">
             <h1>My Todo List</h1>
-            <form action="/create" method="POST" class="add-form" x-on:submit="isSubmitting = true" x-bind:class="{ 'loading': isSubmitting }">
-                <input type="text" name="task" placeholder="What needs to be done?" required x-bind:disabled="isSubmitting"/>
-                <button type="submit" class="btn btn-primary" x-bind:disabled="isSubmitting">
-                    <span x-show="!isSubmitting">Add Task</span>
-                    <span x-show="isSubmitting">Adding...</span>
-                </button>
+            <form action="/create" method="POST" class="add-form">
+                <div class="flex gap-3 items-center">
+                    @input.Input(input.Props{
+                        ID: "task",
+                        Name: "task",
+                        Type: input.TypeText,
+                        Required: true,
+                        Placeholder: "What needs to be done?",
+                        Class: "flex-1",
+                    })
+                    @button.Button(button.Props{
+                        Type: TypeSubmit,
+                        Variant: VariantDefault,
+                    }) {
+                        Add Task
+                    }
+                </div>
             </form>
             <ul class="todo-list">
                 for _, todo := range todos {
-                    <li class="todo-item fade-in" 
-                        x-bind:class="{ 'completed': false }" 
+                    <li class="todo-item fade-in"
+                        x-bind:class="{ 'completed': false }"
                         x-data={ fmt.Sprintf("{ completed: %t, deleting: false, toggling: false }", todo.Done) }>
                         <div class="todo-content">
-                            <form action="/toggle" method="POST" style="display: inline;" 
-                                  x-on:submit="toggling = true" 
+                            <form action="/toggle" method="POST" style="display: inline;"
+                                  x-on:submit="toggling = true"
                                   x-bind:class="{ 'loading': toggling }">
                                 <input type="hidden" name="id" value={ strconv.Itoa(todo.ID) }/>
-                                <button type="submit" class="btn-toggle" 
-                                        title="Toggle completion"
-                                        x-bind:disabled="toggling || deleting">
+                                @button.Button(button.Props{
+                                    Type: TypeSubmit,
+                                    Variant: VariantGhost,
+                                    Size: SizeIcon,
+                                    Class: "p-2",
+                                    Attributes: templ.Attributes{
+                                        "title": "Toggle completion",
+                                        "x-bind:disabled": "toggling || deleting",
+                                    },
+                                }) {
                                     if todo.Done {
                                         ✅
                                     } else {
-                                        🔲
+                                        ☐
                                     }
-                                </button>
+                                }
                             </form>
                             <span class="todo-text" x-bind:class="{ 'completed': completed }">{ todo.Task }</span>
                         </div>
                         <div class="todo-actions">
-                            <form action="/delete" method="POST" style="display: inline;" 
+                            <form action="/delete" method="POST" style="display: inline;"
                                   x-on:submit="deleting = true; $el.closest('.todo-item').classList.add('fade-out')">
                                 <input type="hidden" name="id" value={ strconv.Itoa(todo.ID) }/>
-                                <button type="submit" class="btn btn-danger" 
-                                        x-bind:disabled="deleting || toggling">
+                                @button.Button(button.Props{
+                                    Type: TypeSubmit,
+                                    Variant: VariantDestructive,
+                                    Class: "btn btn-danger",
+                                    Attributes: templ.Attributes{
+                                        "x-bind:disabled": "deleting || toggling",
+                                    },
+                                }) {
                                     <span x-show="!deleting">Delete</span>
                                     <span x-show="deleting">Deleting...</span>
-                                </button>
+                                }
                             </form>
                         </div>
                     </li>
@@ -302,14 +336,46 @@ templ Todos(todos []models.Todo) {
                     <h3>No todos yet!</h3>
                     <p>Add your first task above to get started.</p>
                 </div>
+            } else if paginationData.TotalPages > 1 {
+                <!-- Dynamic Pagination -->
+                <div class="mt-8">
+                    @pagination.Pagination() {
+                        @pagination.Content() {
+                            @pagination.Item() {
+                                @pagination.Previous(pagination.PreviousProps{
+                                    Disabled: !paginationData.HasPrevious,
+                                    Href: fmt.Sprintf("/?page=%d", paginationData.PreviousPage),
+                                    Label: "Previous",
+                                })
+                            }
+                            for i := 1; i <= paginationData.TotalPages; i++ {
+                                @pagination.Item() {
+                                    @pagination.Link(pagination.LinkProps{
+                                        IsActive: i == paginationData.CurrentPage,
+                                        Href: fmt.Sprintf("/?page=%d", i),
+                                    }) {
+                                        { strconv.Itoa(i) }
+                                    }
+                                }
+                            }
+                            @pagination.Item() {
+                                @pagination.Next(pagination.NextProps{
+                                    Disabled: !paginationData.HasNext,
+                                    Href: fmt.Sprintf("/?page=%d", paginationData.NextPage),
+                                    Label: "Next",
+                                })
+                            }
+                        }
+                    }
+                </div>
             }
             </div>
-            
+
             <script>
                 function todoApp() {
                     return {
                         isSubmitting: false,
-                        
+
                         init() {
                             // Reset form state after page load
                             this.isSubmitting = false;
