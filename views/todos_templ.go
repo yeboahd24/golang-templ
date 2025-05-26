@@ -11,6 +11,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"fmt"
 	"go-crud-app/models"
 	"strconv"
 )
@@ -36,81 +37,94 @@ func Todos(todos []models.Todo) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<html><head><title>Todos</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>\n                * {\n                    margin: 0;\n                    padding: 0;\n                    box-sizing: border-box;\n                }\n\n                body {\n                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;\n                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n                    min-height: 100vh;\n                    padding: 20px;\n                }\n\n                .container {\n                    max-width: 600px;\n                    margin: 0 auto;\n                    background: rgba(255, 255, 255, 0.95);\n                    backdrop-filter: blur(10px);\n                    border-radius: 20px;\n                    padding: 40px;\n                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);\n                }\n\n                h1 {\n                    text-align: center;\n                    color: #333;\n                    margin-bottom: 30px;\n                    font-size: 2.5rem;\n                    font-weight: 700;\n                    background: linear-gradient(135deg, #667eea, #764ba2);\n                    -webkit-background-clip: text;\n                    -webkit-text-fill-color: transparent;\n                    background-clip: text;\n                }\n\n                .add-form {\n                    display: flex;\n                    gap: 12px;\n                    margin-bottom: 30px;\n                    background: #f8f9fa;\n                    padding: 20px;\n                    border-radius: 15px;\n                    border: 2px solid #e9ecef;\n                }\n\n                .add-form input {\n                    flex: 1;\n                    padding: 12px 16px;\n                    border: 2px solid #dee2e6;\n                    border-radius: 10px;\n                    font-size: 16px;\n                    transition: all 0.3s ease;\n                    background: white;\n                }\n\n                .add-form input:focus {\n                    outline: none;\n                    border-color: #667eea;\n                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);\n                }\n\n                .btn {\n                    padding: 12px 24px;\n                    border: none;\n                    border-radius: 10px;\n                    font-size: 16px;\n                    font-weight: 600;\n                    cursor: pointer;\n                    transition: all 0.3s ease;\n                    text-transform: uppercase;\n                    letter-spacing: 0.5px;\n                }\n\n                .btn-primary {\n                    background: linear-gradient(135deg, #667eea, #764ba2);\n                    color: white;\n                }\n\n                .btn-primary:hover {\n                    transform: translateY(-2px);\n                    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);\n                }\n\n                .btn-danger {\n                    background: linear-gradient(135deg, #ff6b6b, #ee5a52);\n                    color: white;\n                    padding: 6px 12px;\n                    font-size: 12px;\n                    margin-left: 10px;\n                }\n\n                .btn-danger:hover {\n                    transform: translateY(-1px);\n                    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);\n                }\n\n                .todo-list {\n                    list-style: none;\n                }\n\n                .todo-item {\n                    background: white;\n                    margin-bottom: 12px;\n                    padding: 20px;\n                    border-radius: 12px;\n                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);\n                    border: 1px solid #e9ecef;\n                    display: flex;\n                    align-items: center;\n                    justify-content: space-between;\n                    transition: all 0.3s ease;\n                }\n\n                .todo-item:hover {\n                    transform: translateY(-2px);\n                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);\n                }\n\n                .todo-content {\n                    display: flex;\n                    align-items: center;\n                    gap: 15px;\n                    flex: 1;\n                }\n\n                .todo-text {\n                    font-size: 16px;\n                    color: #333;\n                    font-weight: 500;\n                }\n\n                .status-icon {\n                    font-size: 20px;\n                    min-width: 24px;\n                }\n\n                .btn-toggle {\n                    background: none;\n                    border: none;\n                    font-size: 20px;\n                    cursor: pointer;\n                    padding: 5px;\n                    border-radius: 8px;\n                    transition: all 0.3s ease;\n                    min-width: 32px;\n                    height: 32px;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                }\n\n                .btn-toggle:hover {\n                    background: rgba(102, 126, 234, 0.1);\n                    transform: scale(1.1);\n                }\n\n                .todo-actions {\n                    display: flex;\n                    gap: 10px;\n                    align-items: center;\n                }\n\n                .empty-state {\n                    text-align: center;\n                    padding: 60px 20px;\n                    color: #6c757d;\n                }\n\n                .empty-state h3 {\n                    font-size: 1.5rem;\n                    margin-bottom: 10px;\n                    color: #495057;\n                }\n\n                @media (max-width: 768px) {\n                    .container {\n                        margin: 10px;\n                        padding: 20px;\n                    }\n                    \n                    h1 {\n                        font-size: 2rem;\n                    }\n                    \n                    .add-form {\n                        flex-direction: column;\n                    }\n                    \n                    .todo-item {\n                        flex-direction: column;\n                        align-items: flex-start;\n                        gap: 15px;\n                    }\n                    \n                    .todo-content {\n                        width: 100%;\n                    }\n                }\n            </style></head><body><div class=\"container\"><h1>My Todo List</h1><form action=\"/create\" method=\"POST\" class=\"add-form\"><input type=\"text\" name=\"task\" placeholder=\"What needs to be done?\" required> <button type=\"submit\" class=\"btn btn-primary\">Add Task</button></form><ul class=\"todo-list\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<html><head><title>Todos</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><script defer src=\"https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js\"></script><style>\n                * {\n                    margin: 0;\n                    padding: 0;\n                    box-sizing: border-box;\n                }\n\n                body {\n                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;\n                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n                    min-height: 100vh;\n                    padding: 20px;\n                }\n\n                .container {\n                    max-width: 600px;\n                    margin: 0 auto;\n                    background: rgba(255, 255, 255, 0.95);\n                    backdrop-filter: blur(10px);\n                    border-radius: 20px;\n                    padding: 40px;\n                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);\n                }\n\n                h1 {\n                    text-align: center;\n                    color: #333;\n                    margin-bottom: 30px;\n                    font-size: 2.5rem;\n                    font-weight: 700;\n                    background: linear-gradient(135deg, #667eea, #764ba2);\n                    -webkit-background-clip: text;\n                    -webkit-text-fill-color: transparent;\n                    background-clip: text;\n                }\n\n                .add-form {\n                    display: flex;\n                    gap: 12px;\n                    margin-bottom: 30px;\n                    background: #f8f9fa;\n                    padding: 20px;\n                    border-radius: 15px;\n                    border: 2px solid #e9ecef;\n                }\n\n                .add-form input {\n                    flex: 1;\n                    padding: 12px 16px;\n                    border: 2px solid #dee2e6;\n                    border-radius: 10px;\n                    font-size: 16px;\n                    transition: all 0.3s ease;\n                    background: white;\n                }\n\n                .add-form input:focus {\n                    outline: none;\n                    border-color: #667eea;\n                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);\n                }\n\n                .btn {\n                    padding: 12px 24px;\n                    border: none;\n                    border-radius: 10px;\n                    font-size: 16px;\n                    font-weight: 600;\n                    cursor: pointer;\n                    transition: all 0.3s ease;\n                    text-transform: uppercase;\n                    letter-spacing: 0.5px;\n                }\n\n                .btn-primary {\n                    background: linear-gradient(135deg, #667eea, #764ba2);\n                    color: white;\n                }\n\n                .btn-primary:hover {\n                    transform: translateY(-2px);\n                    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);\n                }\n\n                .btn-danger {\n                    background: linear-gradient(135deg, #ff6b6b, #ee5a52);\n                    color: white;\n                    padding: 6px 12px;\n                    font-size: 12px;\n                    margin-left: 10px;\n                }\n\n                .btn-danger:hover {\n                    transform: translateY(-1px);\n                    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);\n                }\n\n                .todo-list {\n                    list-style: none;\n                }\n\n                .todo-item {\n                    background: white;\n                    margin-bottom: 12px;\n                    padding: 20px;\n                    border-radius: 12px;\n                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);\n                    border: 1px solid #e9ecef;\n                    display: flex;\n                    align-items: center;\n                    justify-content: space-between;\n                    transition: all 0.3s ease;\n                }\n\n                .todo-item:hover {\n                    transform: translateY(-2px);\n                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);\n                }\n\n                .todo-item.completed {\n                    opacity: 0.7;\n                    background: #f8f9fa;\n                }\n\n                .todo-item.completed .todo-text {\n                    text-decoration: line-through;\n                    color: #6c757d;\n                }\n\n                .fade-in {\n                    animation: fadeIn 0.5s ease-in;\n                }\n\n                .fade-out {\n                    animation: fadeOut 0.3s ease-out forwards;\n                }\n\n                @keyframes fadeIn {\n                    from { opacity: 0; transform: translateY(-10px); }\n                    to { opacity: 1; transform: translateY(0); }\n                }\n\n                @keyframes fadeOut {\n                    from { opacity: 1; transform: translateY(0); }\n                    to { opacity: 0; transform: translateY(-10px); }\n                }\n\n                .loading {\n                    opacity: 0.6;\n                    pointer-events: none;\n                }\n\n                .btn:disabled {\n                    opacity: 0.6;\n                    cursor: not-allowed;\n                }\n\n                .todo-content {\n                    display: flex;\n                    align-items: center;\n                    gap: 15px;\n                    flex: 1;\n                }\n\n                .todo-text {\n                    font-size: 16px;\n                    color: #333;\n                    font-weight: 500;\n                }\n\n                .status-icon {\n                    font-size: 20px;\n                    min-width: 24px;\n                }\n\n                .btn-toggle {\n                    background: none;\n                    border: none;\n                    font-size: 20px;\n                    cursor: pointer;\n                    padding: 5px;\n                    border-radius: 8px;\n                    transition: all 0.3s ease;\n                    min-width: 32px;\n                    height: 32px;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                }\n\n                .btn-toggle:hover {\n                    background: rgba(102, 126, 234, 0.1);\n                    transform: scale(1.1);\n                }\n\n                .todo-actions {\n                    display: flex;\n                    gap: 10px;\n                    align-items: center;\n                }\n\n                .empty-state {\n                    text-align: center;\n                    padding: 60px 20px;\n                    color: #6c757d;\n                }\n\n                .empty-state h3 {\n                    font-size: 1.5rem;\n                    margin-bottom: 10px;\n                    color: #495057;\n                }\n\n                @media (max-width: 768px) {\n                    .container {\n                        margin: 10px;\n                        padding: 20px;\n                    }\n                    \n                    h1 {\n                        font-size: 2rem;\n                    }\n                    \n                    .add-form {\n                        flex-direction: column;\n                    }\n                    \n                    .todo-item {\n                        flex-direction: column;\n                        align-items: flex-start;\n                        gap: 15px;\n                    }\n                    \n                    .todo-content {\n                        width: 100%;\n                    }\n                }\n            </style></head><body x-data=\"todoApp()\"><div class=\"container\"><h1>My Todo List</h1><form action=\"/create\" method=\"POST\" class=\"add-form\" x-on:submit=\"isSubmitting = true\" x-bind:class=\"{ &#39;loading&#39;: isSubmitting }\"><input type=\"text\" name=\"task\" placeholder=\"What needs to be done?\" required x-bind:disabled=\"isSubmitting\"> <button type=\"submit\" class=\"btn btn-primary\" x-bind:disabled=\"isSubmitting\"><span x-show=\"!isSubmitting\">Add Task</span> <span x-show=\"isSubmitting\">Adding...</span></button></form><ul class=\"todo-list\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, todo := range todos {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<li class=\"todo-item\"><div class=\"todo-content\"><form action=\"/toggle\" method=\"POST\" style=\"display: inline;\"><input type=\"hidden\" name=\"id\" value=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<li class=\"todo-item fade-in\" x-bind:class=\"{ &#39;completed&#39;: false }\" x-data=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var2 string
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(todo.ID))
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ completed: %t, deleting: false, toggling: false }", todo.Done))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 226, Col: 92}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 268, Col: 110}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"> <button type=\"submit\" class=\"btn-toggle\" title=\"Toggle completion\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if todo.Done {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "✅")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "🔲")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</button></form><span class=\"todo-text\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><div class=\"todo-content\"><form action=\"/toggle\" method=\"POST\" style=\"display: inline;\" x-on:submit=\"toggling = true\" x-bind:class=\"{ &#39;loading&#39;: toggling }\"><input type=\"hidden\" name=\"id\" value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(todo.Task)
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(todo.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 235, Col: 63}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 273, Col: 92}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span></div><div class=\"todo-actions\"><form action=\"/delete\" method=\"POST\" style=\"display: inline;\"><input type=\"hidden\" name=\"id\" value=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"> <button type=\"submit\" class=\"btn-toggle\" title=\"Toggle completion\" x-bind:disabled=\"toggling || deleting\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if todo.Done {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "✅")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "🔲")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</button></form><span class=\"todo-text\" x-bind:class=\"{ &#39;completed&#39;: completed }\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(todo.ID))
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(todo.Task)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 239, Col: 92}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 284, Col: 105}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\"> <button type=\"submit\" class=\"btn btn-danger\">Delete</button></form></div></li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</span></div><div class=\"todo-actions\"><form action=\"/delete\" method=\"POST\" style=\"display: inline;\" x-on:submit=\"deleting = true; $el.closest(&#39;.todo-item&#39;).classList.add(&#39;fade-out&#39;)\"><input type=\"hidden\" name=\"id\" value=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(todo.ID))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/todos.templ`, Line: 289, Col: 92}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\"> <button type=\"submit\" class=\"btn btn-danger\" x-bind:disabled=\"deleting || toggling\"><span x-show=\"!deleting\">Delete</span> <span x-show=\"deleting\">Deleting...</span></button></form></div></li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</ul>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</ul>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(todos) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"empty-state\"><h3>No todos yet!</h3><p>Add your first task above to get started.</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"empty-state\" x-show=\"true\" x-transition><h3>No todos yet!</h3><p>Add your first task above to get started.</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><script>\n                function todoApp() {\n                    return {\n                        isSubmitting: false,\n                        \n                        init() {\n                            // Reset form state after page load\n                            this.isSubmitting = false;\n                        }\n                    }\n                }\n            </script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

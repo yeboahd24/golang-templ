@@ -3,6 +3,7 @@ package views
 import (
     "go-crud-app/models"
     "strconv"
+    "fmt"
 )
 
 templ Todos(todos []models.Todo) {
@@ -10,6 +11,7 @@ templ Todos(todos []models.Todo) {
         <head>
             <title>Todos</title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js"></script>
             <style>
                 * {
                     margin: 0;
@@ -129,6 +131,44 @@ templ Todos(todos []models.Todo) {
                     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
                 }
 
+                .todo-item.completed {
+                    opacity: 0.7;
+                    background: #f8f9fa;
+                }
+
+                .todo-item.completed .todo-text {
+                    text-decoration: line-through;
+                    color: #6c757d;
+                }
+
+                .fade-in {
+                    animation: fadeIn 0.5s ease-in;
+                }
+
+                .fade-out {
+                    animation: fadeOut 0.3s ease-out forwards;
+                }
+
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translateY(0); }
+                    to { opacity: 0; transform: translateY(-10px); }
+                }
+
+                .loading {
+                    opacity: 0.6;
+                    pointer-events: none;
+                }
+
+                .btn:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                }
+
                 .todo-content {
                     display: flex;
                     align-items: center;
@@ -211,20 +251,29 @@ templ Todos(todos []models.Todo) {
                 }
             </style>
         </head>
-        <body>
+        <body x-data="todoApp()">
             <div class="container">
             <h1>My Todo List</h1>
-            <form action="/create" method="POST" class="add-form">
-                <input type="text" name="task" placeholder="What needs to be done?" required/>
-                <button type="submit" class="btn btn-primary">Add Task</button>
+            <form action="/create" method="POST" class="add-form" x-on:submit="isSubmitting = true" x-bind:class="{ 'loading': isSubmitting }">
+                <input type="text" name="task" placeholder="What needs to be done?" required x-bind:disabled="isSubmitting"/>
+                <button type="submit" class="btn btn-primary" x-bind:disabled="isSubmitting">
+                    <span x-show="!isSubmitting">Add Task</span>
+                    <span x-show="isSubmitting">Adding...</span>
+                </button>
             </form>
             <ul class="todo-list">
                 for _, todo := range todos {
-                    <li class="todo-item">
+                    <li class="todo-item fade-in" 
+                        x-bind:class="{ 'completed': false }" 
+                        x-data={ fmt.Sprintf("{ completed: %t, deleting: false, toggling: false }", todo.Done) }>
                         <div class="todo-content">
-                            <form action="/toggle" method="POST" style="display: inline;">
+                            <form action="/toggle" method="POST" style="display: inline;" 
+                                  x-on:submit="toggling = true" 
+                                  x-bind:class="{ 'loading': toggling }">
                                 <input type="hidden" name="id" value={ strconv.Itoa(todo.ID) }/>
-                                <button type="submit" class="btn-toggle" title="Toggle completion">
+                                <button type="submit" class="btn-toggle" 
+                                        title="Toggle completion"
+                                        x-bind:disabled="toggling || deleting">
                                     if todo.Done {
                                         ✅
                                     } else {
@@ -232,24 +281,42 @@ templ Todos(todos []models.Todo) {
                                     }
                                 </button>
                             </form>
-                            <span class="todo-text">{ todo.Task }</span>
+                            <span class="todo-text" x-bind:class="{ 'completed': completed }">{ todo.Task }</span>
                         </div>
                         <div class="todo-actions">
-                            <form action="/delete" method="POST" style="display: inline;">
+                            <form action="/delete" method="POST" style="display: inline;" 
+                                  x-on:submit="deleting = true; $el.closest('.todo-item').classList.add('fade-out')">
                                 <input type="hidden" name="id" value={ strconv.Itoa(todo.ID) }/>
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger" 
+                                        x-bind:disabled="deleting || toggling">
+                                    <span x-show="!deleting">Delete</span>
+                                    <span x-show="deleting">Deleting...</span>
+                                </button>
                             </form>
                         </div>
                     </li>
                 }
             </ul>
             if len(todos) == 0 {
-                <div class="empty-state">
+                <div class="empty-state" x-show="true" x-transition>
                     <h3>No todos yet!</h3>
                     <p>Add your first task above to get started.</p>
                 </div>
             }
             </div>
+            
+            <script>
+                function todoApp() {
+                    return {
+                        isSubmitting: false,
+                        
+                        init() {
+                            // Reset form state after page load
+                            this.isSubmitting = false;
+                        }
+                    }
+                }
+            </script>
         </body>
     </html>
 }
